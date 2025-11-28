@@ -16,21 +16,17 @@
             char cPlayer = 'P';
             int playerPosX = 13;
             int playerPosY = 5;
-            /*
             int maxPosX = 25;
             int maxPosY = 10;
-            */
             ConsoleKeyInfo cKey;
 
             while(true) // 무한 루프
             {
-                /*
                 //범위 지정 [0 ~ maxPos]
                 playerPosX = playerPosX < 0 ? 0 : playerPosX;
                 playerPosY = playerPosY < 0 ? 0 : playerPosY;
                 playerPosX = playerPosX > maxPosX ? maxPosX : playerPosX;
                 playerPosY = playerPosY > maxPosY ? maxPosY : playerPosY;
-                */
           
                 // Player를 좌표에 그림
                 Console.Clear();
