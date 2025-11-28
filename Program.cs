@@ -11,7 +11,7 @@
             Console.Title = "My Sokoban";
             Console.CursorVisible = false;
             Console.Clear();
-
+            asd
             // 변수 초기화
             char cPlayer = 'P';
             int playerPosX = 13;
