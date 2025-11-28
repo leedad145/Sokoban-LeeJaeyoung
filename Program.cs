@@ -74,23 +74,6 @@
 
                 Console.Clear();
 
-                // 벽 플레이어 충돌 감지 확인
-                isSamePlayerXAndWallX = playerPosX == wallPosX;
-                isSamePlayerYAndWallY = playerPosY == wallPosY;
-                isCollidedPlayerWithWall = isSamePlayerXAndWallX && isSamePlayerYAndWallY;
-                // 박스 플레이어 충돌 감지 확인
-                isSamePlayerXAndBoxX = playerPosX == boxPosX;
-                isSamePlayerYAndBoxY = playerPosY == boxPosY;
-                isCollidedPlayerWithBox = isSamePlayerXAndBoxX && isSamePlayerYAndBoxY;
-                // 박스 벽 충돌 감지 확인
-                isSameWallXAndBoxX = wallPosX == boxPosX;
-                isSameWallYAndBoxY = wallPosY == boxPosY;
-                isCollidedWallWithBox = isSameWallXAndBoxX && isSameWallYAndBoxY;
-                // 골 박스 충돌 감지 확인
-                isSameGoalXAndBoxX = goalPosX == boxPosX;
-                isSameGoalYAndBoxY = goalPosY == boxPosY;
-                isCollidedGoalWithBox = isSameGoalXAndBoxX && isSameGoalYAndBoxY;
-
                 switch (cKey.Key)
                 {
                     case ConsoleKey.LeftArrow:
