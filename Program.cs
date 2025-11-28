@@ -17,9 +17,36 @@
             Console.CursorVisible = false;
             Console.Clear();
 
+            char cPlayer = 'P';
+            int playerPosX = 5;
+            int playerPosY = 10;
+            ConsoleKeyInfo cKey;
 
-            Console.Write("입력시 종료: ");
-            Console.Read();
+            while(true) //무한 루프
+            {
+                //Player를 그림
+                Console.Clear();
+                Console.SetCursorPosition(playerPosX, playerPosY);
+                Console.Write(cPlayer);
+
+                //키를 입력받아 Player의 좌표를 변경함
+                cKey = Console.ReadKey();
+                switch (cKey.Key)
+                {
+                    case ConsoleKey.LeftArrow:
+                        playerPosX--;
+                        break;
+                    case ConsoleKey.UpArrow:
+                        playerPosY--;
+                        break;
+                    case ConsoleKey.RightArrow:
+                        playerPosX++;
+                        break;
+                    case ConsoleKey.DownArrow:
+                        playerPosY++;
+                        break;
+                }
+            }
         }
     }
 }
