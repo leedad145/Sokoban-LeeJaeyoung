@@ -36,51 +36,61 @@
             int maxPosY = 10;
 
             // 벽 플레이어 충돌 감지 확인
-            bool isSamePlayerXAndWallX = playerPosX == wallPosX;
-            bool isSamePlayerYAndWallY = playerPosY == wallPosY;
-            bool isCollidedPlayerWithWall = isSamePlayerXAndWallX && isSamePlayerYAndWallY;
+            bool isSamePlayerXAndWallX;
+            bool isSamePlayerYAndWallY;
+            bool isCollidedPlayerWithWall;
 
             // 박스 플레이어 충돌 감지 확인
-            bool isSamePlayerXAndBoxX = playerPosX == boxPosX;
-            bool isSamePlayerYAndBoxY = playerPosY == boxPosY;
-            bool isCollidedPlayerWithBox = isSamePlayerXAndBoxX && isSamePlayerYAndBoxY;
+            bool isSamePlayerXAndBoxX;
+            bool isSamePlayerYAndBoxY;
+            bool isCollidedPlayerWithBox;
 
             // 박스 벽 충돌 감지 확인
-            bool isSameWallXAndBoxX = wallPosX == boxPosX;
-            bool isSameWallYAndBoxY = wallPosY == boxPosY;
-            bool isCollidedWallWithBox = isSameWallXAndBoxX && isSameWallYAndBoxY;
+            bool isSameWallXAndBoxX;
+            bool isSameWallYAndBoxY;
+            bool isCollidedWallWithBox;
 
             // 골 박스 충돌 감지 확인
-            bool isSameGoalXAndBoxX = goalPosX == boxPosX;
-            bool isSameGoalYAndBoxY = goalPosY == boxPosY;
-            bool isCollidedGoalWithBox = isSameGoalXAndBoxX && isSameGoalYAndBoxY;
-
+            bool isSameGoalXAndBoxX;
+            bool isSameGoalYAndBoxY;
+            bool isCollidedGoalWithBox;
 
             ConsoleKeyInfo cKey;
 
-            // 벽 매핑
-            // int[,] wallMapping = new int[maxPosX - minPosX, maxPosY - minPosY];
-
-
-
             while (true) // 무한 루프
             {
-                // Player를 좌표에 그림
+                // 좌표에 오브젝트 그림
                 Console.SetCursorPosition(playerPosX, playerPosY);
                 Console.Write(cPlayer);
-                // 벽 그림
                 Console.SetCursorPosition(wallPosX, wallPosY);
                 Console.Write(cWall);
-                // 박스 그림
                 Console.SetCursorPosition(boxPosX, boxPosY);
                 Console.Write(cBox);
-                // 골 그림
                 Console.SetCursorPosition(goalPosX, goalPosX);
                 Console.Write(cGoal);
 
-                // 키를 입력받아 Player의 좌표를 변경함
+                // 키를 입력
                 cKey = Console.ReadKey();
+
                 Console.Clear();
+
+                // 벽 플레이어 충돌 감지 확인
+                isSamePlayerXAndWallX = playerPosX == wallPosX;
+                isSamePlayerYAndWallY = playerPosY == wallPosY;
+                isCollidedPlayerWithWall = isSamePlayerXAndWallX && isSamePlayerYAndWallY;
+                // 박스 플레이어 충돌 감지 확인
+                isSamePlayerXAndBoxX = playerPosX == boxPosX;
+                isSamePlayerYAndBoxY = playerPosY == boxPosY;
+                isCollidedPlayerWithBox = isSamePlayerXAndBoxX && isSamePlayerYAndBoxY;
+                // 박스 벽 충돌 감지 확인
+                isSameWallXAndBoxX = wallPosX == boxPosX;
+                isSameWallYAndBoxY = wallPosY == boxPosY;
+                isCollidedWallWithBox = isSameWallXAndBoxX && isSameWallYAndBoxY;
+                // 골 박스 충돌 감지 확인
+                isSameGoalXAndBoxX = goalPosX == boxPosX;
+                isSameGoalYAndBoxY = goalPosY == boxPosY;
+                isCollidedGoalWithBox = isSameGoalXAndBoxX && isSameGoalYAndBoxY;
+
                 switch (cKey.Key)
                 {
                     case ConsoleKey.LeftArrow:
@@ -198,6 +208,17 @@
                     Console.Write("박스 골 충돌"); 
                     Console.SetCursorPosition(0, 7);
                     Console.Write("박스 골 충돌");
+                    Console.SetCursorPosition(0, 8);
+                    Console.Write("박스 골 충돌");
+                    Console.SetCursorPosition(0, 9);
+                    Console.Write("박스 골 충돌");
+                    Console.SetCursorPosition(0, 10);
+                    Console.Write("박스 골 충돌");
+
+                    Console.SetCursorPosition(20, 20);
+                    Console.Write("종료하려면 아무키나 누르세요");
+                    Console.ReadKey();
+                    break;
                 }
             }
         }
