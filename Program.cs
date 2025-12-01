@@ -60,26 +60,31 @@
 
                 // 플레이어 이동위치 지정 playerNewPosX, playerNewPosY
                 (int playerNewPosX, int playerNewPosY) = MoveObjectPos(cKey, playerPosX, playerPosY);
-
+                
                 // 벽과 플레이어 충돌
-                if (CollidedObjects(wallPosX, wallPosY, playerNewPosX, playerNewPosY))
+                if (IsCollidedObjects(wallPosX, wallPosY, playerNewPosX, playerNewPosY))
                 {
-                    //무반응
                     Console.SetCursorPosition(10, 20);
                     Console.Write("플레이어 벽 충돌");
                 }
                 // 박스와 플레이어 충돌
-                else if (CollidedObjects(boxPosX, boxPosY, playerNewPosX, playerNewPosY))
+                else if (IsCollidedObjects(boxPosX, boxPosY, playerNewPosX, playerNewPosY))
                 {
                     // 박스 이동위치 지정 boxNewPosX, boxNewPosY
                     (int boxNewPosX, int boxNewPosY) = MoveObjectPos(cKey, boxPosX, boxPosY);
 
                     // 박스가 벽과 충돌
-                    if (CollidedObjects(wallPosX, wallPosY, boxNewPosX, boxNewPosY))
+                    if (IsCollidedObjects(wallPosX, wallPosY, boxNewPosX, boxNewPosY))
                     {
-                        //무반응
                         Console.SetCursorPosition(10, 20);
                         Console.Write("박스 벽 충돌");
+                    }
+                    // 박스가 테두리에 도달
+                    // 범위 제한이 있기 때문에 boxNewPos와 playerNewPos가 같을 때 테두리에 위치함
+                    else if (IsCollidedObjects(boxNewPosX, boxNewPosY, playerNewPosX, playerNewPosY))
+                    {
+                        Console.SetCursorPosition(10, 20);
+                        Console.Write("박스 테두리 충돌");
                     }
                     else // 박스와 함께 이동
                     {
@@ -87,7 +92,7 @@
                         (playerPosX, playerPosY) = (playerNewPosX, playerNewPosY);
 
                         // 박스 골 충돌
-                        if (CollidedObjects(goalPosX, goalPosY, boxPosX, boxPosY))
+                        if (IsCollidedObjects(goalPosX, goalPosY, boxPosX, boxPosY))
                         {
                             Console.SetCursorPosition(5, 5);
                             Console.Write("박스 골 충돌");
@@ -107,7 +112,7 @@
         }
 
         // Obj1과 Obj2의 충돌 판단
-        static bool CollidedObjects(int obj1X, int obj1Y, int obj2X, int obj2Y)
+        static bool IsCollidedObjects(int obj1X, int obj1Y, int obj2X, int obj2Y)
         {
             bool isSameObj1XAndObj2X = obj1X == obj2X;
             bool isSameObj1YAndObj2Y = obj1Y == obj2Y;
