@@ -2,7 +2,7 @@
 {
     internal class Program
     {
-        enum MapSize : int
+        enum MapSize : int // Object의 움직임을 제한하는 범위
         {
             MinPosX = 0,
             MinPosY = 0,
@@ -59,7 +59,7 @@
                 Console.Clear();
 
                 // 플레이어 이동위치 지정 playerNewPosX, playerNewPosY
-                (int playerNewPosX, int playerNewPosY) = MoveObject(cKey, playerPosX, playerPosY);
+                (int playerNewPosX, int playerNewPosY) = MoveObjectPos(cKey, playerPosX, playerPosY);
 
                 // 벽과 플레이어 충돌
                 if (CollidedObjects(wallPosX, wallPosY, playerNewPosX, playerNewPosY))
@@ -72,7 +72,7 @@
                 else if (CollidedObjects(boxPosX, boxPosY, playerNewPosX, playerNewPosY))
                 {
                     // 박스 이동위치 지정 boxNewPosX, boxNewPosY
-                    (int boxNewPosX, int boxNewPosY) = MoveObject(cKey, boxPosX, boxPosY);
+                    (int boxNewPosX, int boxNewPosY) = MoveObjectPos(cKey, boxPosX, boxPosY);
 
                     // 박스가 벽과 충돌
                     if (CollidedObjects(wallPosX, wallPosY, boxNewPosX, boxNewPosY))
@@ -115,7 +115,7 @@
         }
 
         // 키입력 방향 이동
-        static (int x, int y) MoveObject(ConsoleKeyInfo key, int x, int y)
+        static (int x, int y) MoveObjectPos(ConsoleKeyInfo key, int x, int y)
         {
             switch (key.Key)
             {
