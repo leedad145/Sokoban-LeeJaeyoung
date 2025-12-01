@@ -2,6 +2,14 @@
 {
     internal class Program
     {
+        enum MapSize : int
+        {
+            MinPosX = 0,
+            MinPosY = 0,
+            MaxPosX = 20,
+            MaxPosY = 10
+        }
+
         static void Main(string[] args)
         {
             // 콘솔 초기화
@@ -12,12 +20,13 @@
             Console.CursorVisible = false;
             Console.Clear();
 
-            // 변수 초기화
-            char cPlayer = 'P';
-            char cWall = 'W';
-            char cBox = 'B';
-            char cGoal = 'G';
+            // 그릴 문자 지정
+            const char cPlayer = 'P';
+            const char cWall = 'W';
+            const char cBox = 'B';
+            const char cGoal = 'G';
 
+            // 좌표 변수 초기화
             int playerPosX = 10;
             int playerPosY = 5;
 
@@ -29,31 +38,6 @@
 
             int goalPosX = 10;
             int goalPosY = 10;
-            // 맵 사이즈
-            int minPosX = 0;
-            int minPosY = 0;
-            int maxPosX = 20;
-            int maxPosY = 10;
-
-            // 벽 플레이어 충돌 감지 확인
-            bool isSamePlayerXAndWallX;
-            bool isSamePlayerYAndWallY;
-            bool isCollidedPlayerWithWall;
-
-            // 박스 플레이어 충돌 감지 확인
-            bool isSamePlayerXAndBoxX;
-            bool isSamePlayerYAndBoxY;
-            bool isCollidedPlayerWithBox;
-
-            // 박스 벽 충돌 감지 확인
-            bool isSameWallXAndBoxX;
-            bool isSameWallYAndBoxY;
-            bool isCollidedWallWithBox;
-
-            // 골 박스 충돌 감지 확인
-            bool isSameGoalXAndBoxX;
-            bool isSameGoalYAndBoxY;
-            bool isCollidedGoalWithBox;
 
             ConsoleKeyInfo cKey;
 
@@ -74,136 +58,85 @@
 
                 Console.Clear();
 
-                switch (cKey.Key)
+                // 플레이어 이동위치 지정 playerNewPosX, playerNewPosY
+                (int playerNewPosX, int playerNewPosY) = MoveObject(cKey, playerPosX, playerPosY);
+
+                // 벽과 플레이어 충돌
+                if (CollidedObjects(wallPosX, wallPosY, playerNewPosX, playerNewPosY))
                 {
-                    case ConsoleKey.LeftArrow:
-                        playerPosX = Math.Max(minPosX, playerPosX - 1);
-                        break;
-                    case ConsoleKey.RightArrow:
-                        playerPosX = Math.Min(maxPosX, playerPosX + 1);
-                        break;
-                    case ConsoleKey.UpArrow:
-                        playerPosY = Math.Max(minPosY, playerPosY - 1);
-                        break;
-                    case ConsoleKey.DownArrow:
-                        playerPosY = Math.Min(maxPosY, playerPosY + 1);
-                        break;
+                    //무반응
+                    Console.SetCursorPosition(10, 20);
+                    Console.Write("플레이어 벽 충돌");
                 }
-                // 벽 플레이어 충돌 감지 확인
-                isSamePlayerXAndWallX = playerPosX == wallPosX;
-                isSamePlayerYAndWallY = playerPosY == wallPosY;
-                isCollidedPlayerWithWall = isSamePlayerXAndWallX && isSamePlayerYAndWallY;
-
-                if (isCollidedPlayerWithWall)
+                // 박스와 플레이어 충돌
+                else if (CollidedObjects(boxPosX, boxPosY, playerNewPosX, playerNewPosY))
                 {
-                    Console.SetCursorPosition(20, 20);
-                    Console.Write("벽 플레이어 충돌");
+                    // 박스 이동위치 지정 boxNewPosX, boxNewPosY
+                    (int boxNewPosX, int boxNewPosY) = MoveObject(cKey, boxPosX, boxPosY);
 
-                    switch (cKey.Key)
+                    // 박스가 벽과 충돌
+                    if (CollidedObjects(wallPosX, wallPosY, boxNewPosX, boxNewPosY))
                     {
-                        case ConsoleKey.LeftArrow:
-                            playerPosX++;
+                        //무반응
+                        Console.SetCursorPosition(10, 20);
+                        Console.Write("박스 벽 충돌");
+                    }
+                    else // 박스와 함께 이동
+                    {
+                        (boxPosX, boxPosY) = (boxNewPosX, boxNewPosY);
+                        (playerPosX, playerPosY) = (playerNewPosX, playerNewPosY);
+
+                        // 박스 골 충돌
+                        if (CollidedObjects(goalPosX, goalPosY, boxPosX, boxPosY))
+                        {
+                            Console.SetCursorPosition(5, 5);
+                            Console.Write("박스 골 충돌");
+
+                            Console.SetCursorPosition(20, 20);
+                            Console.Write("종료하려면 아무키나 누르세요");
+                            Console.ReadKey();
                             break;
-                        case ConsoleKey.RightArrow:
-                            playerPosX--;
-                            break;
-                        case ConsoleKey.UpArrow:
-                            playerPosY++;
-                            break;
-                        case ConsoleKey.DownArrow:
-                            playerPosY--;
-                            break;
+                        }
                     }
                 }
-                // 박스 플레이어 충돌 감지 확인
-                isSamePlayerXAndBoxX = playerPosX == boxPosX;
-                isSamePlayerYAndBoxY = playerPosY == boxPosY;
-                isCollidedPlayerWithBox = isSamePlayerXAndBoxX && isSamePlayerYAndBoxY;
-                
-                if (isCollidedPlayerWithBox)
+                else // 이동
                 {
-                    Console.SetCursorPosition(20, 21);
-                    Console.Write("박스 플레이어 충돌");
-
-                    switch (cKey.Key)
-                    {
-                        case ConsoleKey.LeftArrow:
-                            boxPosX = Math.Max(minPosX, boxPosX - 1);
-                            break;
-                        case ConsoleKey.RightArrow:
-                            boxPosX = Math.Min(maxPosX, boxPosX + 1);
-                            break;
-                        case ConsoleKey.UpArrow:
-                            boxPosY = Math.Max(minPosY, boxPosY - 1);
-                            break;
-                        case ConsoleKey.DownArrow:
-                            boxPosY = Math.Min(maxPosY, boxPosY + 1);
-                            break;
-                    }
-                }
-                // 박스 벽 충돌 감지 확인
-                isSameWallXAndBoxX = wallPosX == boxPosX;
-                isSameWallYAndBoxY = wallPosY == boxPosY;
-                isCollidedWallWithBox = isSameWallXAndBoxX && isSameWallYAndBoxY;
-
-                if (isCollidedWallWithBox)
-                {
-                    Console.SetCursorPosition(20, 22);
-                    Console.Write("박스 벽 충돌");
-
-                    switch (cKey.Key)
-                    {
-                        case ConsoleKey.LeftArrow:
-                            boxPosX++;
-                            playerPosX++;
-                            break;
-                        case ConsoleKey.RightArrow:
-                            boxPosX--;
-                            playerPosX--;
-                            break;
-                        case ConsoleKey.UpArrow:
-                            boxPosY++;
-                            playerPosY++;
-                            break;
-                        case ConsoleKey.DownArrow:
-                            boxPosY--;
-                            playerPosY--;
-                            break;
-                    }
-                }
-                // 골 박스 충돌 감지 확인
-                isSameGoalXAndBoxX = goalPosX == boxPosX;
-                isSameGoalYAndBoxY = goalPosY == boxPosY;
-                isCollidedGoalWithBox = isSameGoalXAndBoxX && isSameGoalYAndBoxY;
-                if (isCollidedGoalWithBox)
-                {
-                    Console.SetCursorPosition(0, 1);
-                    Console.Write("박스 골 충돌");
-                    Console.SetCursorPosition(0, 2);
-                    Console.Write("박스 골 충돌");
-                    Console.SetCursorPosition(0, 3);
-                    Console.Write("박스 골 충돌");
-                    Console.SetCursorPosition(0, 4);
-                    Console.Write("박스 골 충돌"); 
-                    Console.SetCursorPosition(0, 5);
-                    Console.Write("박스 골 충돌"); 
-                    Console.SetCursorPosition(0, 6);
-                    Console.Write("박스 골 충돌"); 
-                    Console.SetCursorPosition(0, 7);
-                    Console.Write("박스 골 충돌");
-                    Console.SetCursorPosition(0, 8);
-                    Console.Write("박스 골 충돌");
-                    Console.SetCursorPosition(0, 9);
-                    Console.Write("박스 골 충돌");
-                    Console.SetCursorPosition(0, 10);
-                    Console.Write("박스 골 충돌");
-
-                    Console.SetCursorPosition(20, 20);
-                    Console.Write("종료하려면 아무키나 누르세요");
-                    Console.ReadKey();
-                    break;
+                    (playerPosX, playerPosY) = (playerNewPosX, playerNewPosY);
                 }
             }
+        }
+
+        // Obj1과 Obj2의 충돌 판단
+        static bool CollidedObjects(int obj1X, int obj1Y, int obj2X, int obj2Y) 
+        {
+            bool isSameObj1XAndObj2X = obj1X == obj2X;
+            bool isSameObj1YAndObj2Y = obj1Y == obj2Y;
+            return isSameObj1XAndObj2X && isSameObj1YAndObj2Y;
+        }
+
+        // 키입력 방향 이동
+        static (int x, int y) MoveObject(ConsoleKeyInfo key, int x, int y)
+        {
+            switch (key.Key)
+            {
+                case ConsoleKey.LeftArrow:
+                    x = Math.Max((int)MapSize.MinPosX, x - 1);
+                    break;
+                case ConsoleKey.RightArrow:
+                    x = Math.Min((int)MapSize.MaxPosX, x + 1);
+                    break;
+                case ConsoleKey.UpArrow:
+                    y = Math.Max((int)MapSize.MinPosY, y - 1);
+                    break;
+                case ConsoleKey.DownArrow:
+                    y = Math.Min((int)MapSize.MaxPosY, y + 1);
+                    break;
+                default:
+                    Console.SetCursorPosition(10, 20);
+                    Console.WriteLine($"[Error]MoveObject(): 잘못된 방향 입력 [{key.Key}]");
+                    break;
+            }
+            return (x, y);
         }
     }
 }
