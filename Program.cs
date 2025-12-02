@@ -21,25 +21,44 @@
 
             (char drawChar, (int x, int y) pos)[] ObjArr = new (char, (int, int))[]
             {
-                ('P', (10, 5)),
-                ('W', (4, 2)), ('W', (5, 2)), ('W', (6, 2)) ,
-                ('B', (8, 6)) ,('B', (6, 4)) ,('B', (8, 8)) ,
-                ('G', (10, 10))
+                // P: 플레이어 (Player)
+                ('P', (5, 5)), 
+
+                // W: 벽 (Wall) - 외곽과 중앙 장애물
+                ('W', (0, 0)), ('W', (1, 0)), ('W', (2, 0)), ('W', (3, 0)), ('W', (4, 0)), ('W', (5, 0)), ('W', (6, 0)), ('W', (7, 0)), ('W', (8, 0)), ('W', (9, 0)),
+                ('W', (0, 1)), ('W', (9, 1)),
+                ('W', (0, 2)), ('W', (3, 2)), ('W', (9, 2)),
+                ('W', (0, 3)), ('W', (3, 3)), ('W', (9, 3)),
+                ('W', (0, 4)), ('W', (9, 4)),
+                ('W', (0, 5)), ('W', (9, 5)),
+                ('W', (0, 6)), ('W', (9, 6)),
+                ('W', (0, 7)), ('W', (9, 7)),
+                ('W', (0, 8)), ('W', (9, 8)),
+                ('W', (0, 9)), ('W', (1, 9)), ('W', (2, 9)), ('W', (3, 9)), ('W', (4, 9)), ('W', (5, 9)), ('W', (6, 9)), ('W', (7, 9)), ('W', (8, 9)), ('W', (9, 9)),
+    
+                // B: 박스 (Box)
+                ('B', (2, 2)),
+                ('B', (7, 7)), 
+
+                // G: 골 (Goal)
+                ('G', (1, 7)),
+                ('G', (8, 2))
             };
 
             bool isPlayerMove = true;
             bool isBoxMove = true;
             ConsoleKeyInfo cKey;
-
+            int goalPoint = 2;
+            int goalCount = 0;
             while (true) // 무한 루프
             {
                 // 좌표에 오브젝트 그림
-                foreach((char drawChar, (int x, int y) pos)obj in ObjArr)
+                foreach ((char drawChar, (int x, int y) pos) obj in ObjArr)
                 {
                     Console.SetCursorPosition(obj.pos.x, obj.pos.y);
                     Console.Write(obj.drawChar);
                 }
-                
+
                 // 키를 입력
                 cKey = Console.ReadKey();
 
@@ -47,8 +66,8 @@
 
                 // 플레이어 이동위치 지정 playerNewPosX, playerNewPosY
                 (int x, int y) playerNewPos = MoveObjectPos(cKey, ObjArr[0].pos);
-                
-                for(int i = 1; i < ObjArr.Length - 1; i++)
+
+                for (int i = 1; i < ObjArr.Length - 1; i++)
                 {
                     if (ObjArr[i].pos == playerNewPos)// obj와 플레이어 충돌
                     {
@@ -63,13 +82,22 @@
                                 continue;
                             case 'B':
                                 (int x, int y) boxNewPos = MoveObjectPos(cKey, ObjArr[i].pos);
-                                for(int j = 1; j < ObjArr.Length - 1; j++)
+                                for (int j = 1; j < ObjArr.Length - 1; j++)
                                 {
                                     if (boxNewPos == ObjArr[j].pos) // 박스가 다른 오브젝트와 충돌하면
                                     {
-                                        isBoxMove = false;
-                                        Console.SetCursorPosition(10, 20);
-                                        Console.Write($"박스 오브젝트 충돌{ObjArr[j]}");
+                                        if (ObjArr[j].drawChar == 'G')// 박스 골 충돌
+                                        {
+                                            goalCount++;
+                                            Console.SetCursorPosition(5, 5);
+                                            Console.Write("박스 골 충돌");
+                                        }
+                                        else
+                                        {
+                                            isBoxMove = false;
+                                            Console.SetCursorPosition(10, 20);
+                                            Console.Write($"박스 오브젝트 충돌{ObjArr[j]}");
+                                        }
                                     }
                                     else if (boxNewPos == playerNewPos) // 박스가 테두리와 충돌하면
                                     {
@@ -89,60 +117,22 @@
                         }
                     }
                 }
-                if(isPlayerMove)
+                if (isPlayerMove)
                     ObjArr[0].pos = playerNewPos;
 
                 isBoxMove = true;
                 isPlayerMove = true;
-                /*
-                // 벽과 플레이어 충돌
-                if (ObjArrArr[(int)Obj.Wall].Contains(ObjArrArr[(int)Obj.Player][0].pos))
+                // 모든 골안에 박스가 들어있는지 확인
+                if (goalPoint == goalCount) 
                 {
-                    Console.SetCursorPosition(10, 20);
-                    Console.Write("플레이어 벽 충돌");
-                }
-                // 박스와 플레이어 충돌
-                else if (boxPos == playerNewPos)
-                {
-                    // 박스 이동위치 지정 boxNewPosX, boxNewPosY
-                    (int x, int y) boxNewPos = MoveObjectPos(cKey, ObjArrArr[(int)Obj.Box][0].pos);
+                    Console.SetCursorPosition(5, 5);
+                    Console.Write("박스 골 충돌");
 
-                    // 박스가 벽과 충돌
-                    if (wallPos.Contains(boxNewPos))
-                    {
-                        Console.SetCursorPosition(10, 20);
-                        Console.Write("박스 벽 충돌");
-                    }
-                    // 박스가 테두리에 도달
-                    // 범위 제한이 있기 때문에 boxNewPos와 playerNewPos가 같을 때 테두리에 위치함
-                    else if (boxNewPos == playerNewPos)
-                    {
-                        Console.SetCursorPosition(10, 20);
-                        Console.Write("박스 테두리 충돌");
-                    }
-                    else // 박스와 함께 이동
-                    {
-                        ObjArrArr[(int)Obj.Box][0].pos = boxNewPos;
-                        ObjArrArr[(int)Obj.Player][0].pos = playerNewPos;
-
-                        // 박스 골 충돌
-                        if (goalPos == boxPos)
-                        {
-                            Console.SetCursorPosition(5, 5);
-                            Console.Write("박스 골 충돌");
-
-                            Console.SetCursorPosition(20, 20);
-                            Console.Write("종료하려면 아무키나 누르세요");
-                            Console.ReadKey();
-                            break;
-                        }
-                    }
+                    Console.SetCursorPosition(20, 20);
+                    Console.Write("종료하려면 아무키나 누르세요");
+                    Console.ReadKey();
                 }
-                else // 이동
-                {
-                    ObjArrArr[(int)Obj.Player][0].pos = playerNewPos;
-                }
-                */
+                
             }
         }
 
