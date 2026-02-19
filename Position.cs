@@ -10,9 +10,9 @@ public struct Position : IEquatable<Position>
         _x = x;
         _y = y;
     }
-    public Position At(int x, int y)
+    public static Position At(int x, int y)
     {
-        return new Position(X + x, Y + y);
+        return new Position(x, y);
     }
 
     public bool Equals(Position other)

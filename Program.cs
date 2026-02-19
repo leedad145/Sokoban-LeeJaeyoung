@@ -5,7 +5,7 @@
         static void Main(string[] args)
         {
             GameManager gm = new GameManager();
-            gm.DoGame();
+            gm.Run();
         }
     }
 }
